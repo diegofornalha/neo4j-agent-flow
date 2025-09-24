@@ -1,10 +1,31 @@
-# 📚 Bootcamp AI Agents no Flow Blockchain
+# 📚 Bootcamp AI Agents no Flow Blockchain - Diego Fornalha
 
-Bem-vindo ao material completo do Bootcamp de AI Agents no Flow Blockchain! Este repositório contém todos os recursos necessários para aprender a construir agentes inteligentes que interagem com o blockchain Flow.
+## 🎮 Seu Painel de Progresso
+```
+╔════════════════════════════════════════════════╗
+║  Score Atual: 0/100 🌱                        ║
+║  Nível: Iniciante                             ║
+║  Próximo Unlock: Hello World Contract (+10)   ║
+╚════════════════════════════════════════════════╝
+```
+
+## 🎯 Seu Learning Path Personalizado
+
+### ⭐ COMECE AQUI
+**[FLOW_LEARNING_PATH.md](./FLOW_LEARNING_PATH.md)** - Seu roteiro completo com sistema de pontos e tracking
+
+### 📊 Status das Fases
+| Fase | Status | Documento Principal | Seu Progresso |
+|------|--------|-------------------|---------------|
+| 1️⃣ Fundamentos | 🟢 ATIVO | [bootcamp-ai-agents-flow.md](./bootcamp-ai-agents-flow.md) | 0/30 pontos |
+| 2️⃣ Core Dev | 🔒 | [flow-mcp-protocol.md](./flow-mcp-protocol.md) | Requer 31 pts |
+| 3️⃣ AI Agents | 🔒 | [guia-agentkit-flow.md](./guia-agentkit-flow.md) | Requer 61 pts |
+| 4️⃣ Expert | 🔒 | [guia-desenvolvimento-plugins-eliza.md](./guia-desenvolvimento-plugins-eliza.md) | Requer 86 pts |
 
 ## 🎯 Objetivo do Bootcamp
 
-Capacitar desenvolvedores a criar agentes de IA autônomos que podem:
+Transformar você em expert capaz de:
+- Criar agentes de IA autônomos no Flow
 - Executar transações blockchain automaticamente
 - Interagir com smart contracts através de linguagem natural
 - Gerenciar ativos digitais e NFTs
