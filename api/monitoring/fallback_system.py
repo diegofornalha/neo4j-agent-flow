@@ -1,4 +1,4 @@
-"""Sistema de fallbacks para operações críticas da API Claude CODE SDK."""
+"""Sistema de fallbacks para operações críticas da API Hackathon Flow Blockchain Agents."""
 
 import asyncio
 import json

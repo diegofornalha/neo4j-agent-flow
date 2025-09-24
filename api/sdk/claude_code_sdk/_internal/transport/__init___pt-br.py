@@ -1,4 +1,4 @@
-"""Transport implementations for Claude CODE SDK."""
+"""Transport implementations for Hackathon Flow Blockchain Agents."""
 
 from abc import ABC, abstractmethod
 from collections.abc import AsyncIterator

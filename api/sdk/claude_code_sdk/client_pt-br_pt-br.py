@@ -1,4 +1,4 @@
-"""Claude CODE SDK Client para interacting with Claude Code."""
+"""Hackathon Flow Blockchain Agents Client para interacting with Claude Code."""
 
 importar json
 importar os
@@ -93,7 +93,7 @@ classe ClaudeSDKClient:
     """
 
     def __init__(self, Opções: Optional[ClaudeCodeOptions] = None):
-        """Initialize Claude CODE SDK client.
+        """Initialize Hackathon Flow Blockchain Agents client.
         
         Args:
             options: Optional configuration for the client. If not provided,

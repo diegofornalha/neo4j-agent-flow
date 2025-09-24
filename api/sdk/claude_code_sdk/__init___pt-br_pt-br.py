@@ -1,4 +1,4 @@
-"""Claude CODE SDK para Python."""
+"""Hackathon Flow Blockchain Agents para Python."""
 
 from collections.abc importar Awaitable, Callable
 from dataclasses importar dataclass

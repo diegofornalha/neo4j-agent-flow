@@ -1,4 +1,4 @@
-"""Claude CODE SDK for Python."""
+"""Hackathon Flow Blockchain Agents for Python."""
 
 from collections.abc import Awaitable, Callable
 from dataclasses import dataclass

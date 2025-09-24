@@ -145,9 +145,9 @@ async def lifespan(app: FastAPI):
     
     # Inicializa handlers
     try:
-        # Teste de conectividade com Claude CODE SDK
+        # Teste de conectividade com Hackathon Flow Blockchain Agents
         logger.info(
-            "Verificando conectividade com Claude CODE SDK...",
+            "Verificando conectividade com Hackathon Flow Blockchain Agents...",
             extra={"event": "sdk_connectivity_check", "component": "claude_sdk"}
         )
         
@@ -160,19 +160,19 @@ async def lifespan(app: FastAPI):
             await claude_handler.destroy_session('test')
             
         logger.info(
-            "Claude CODE SDK conectado com sucesso",
+            "Hackathon Flow Blockchain Agents conectado com sucesso",
             extra={"event": "sdk_connected", "component": "claude_sdk"}
         )
         
     except asyncio.TimeoutError:
         logger.error(
-            "Timeout na conexão com Claude CODE SDK",
+            "Timeout na conexão com Hackathon Flow Blockchain Agents",
             extra={"event": "sdk_timeout", "component": "claude_sdk", "timeout_seconds": 30}
         )
         health_status['status'] = 'degraded'
     except Exception as e:
         logger.error(
-            "Problema na inicialização do Claude CODE SDK",
+            "Problema na inicialização do Hackathon Flow Blockchain Agents",
             extra={
                 "event": "sdk_init_error", 
                 "component": "claude_sdk",
@@ -486,7 +486,7 @@ def get_system_metrics() -> Dict[str, Any]:
         return {"error": str(e)}
 
 async def check_claude_sdk_health() -> Dict[str, Any]:
-    """Verifica status do Claude CODE SDK."""
+    """Verifica status do Hackathon Flow Blockchain Agents."""
     try:
         # Testa conectividade criando uma sessão temporária
         test_session_id = f"health_check_{int(time.time())}"
@@ -504,7 +504,7 @@ async def check_claude_sdk_health() -> Dict[str, Any]:
             "last_check": datetime.now().isoformat()
         }
     except Exception as e:
-        logger.error(f"Erro na verificação do Claude CODE SDK: {e}")
+        logger.error(f"Erro na verificação do Hackathon Flow Blockchain Agents: {e}")
         return {
             "status": "error",
             "error": str(e),
@@ -545,7 +545,7 @@ class DetailedHealthResponse(BaseModel):
     timestamp: str = Field(..., description="Timestamp da verificação")
     sessions: Dict[str, Any] = Field(..., description="Estatísticas de sessões")
     system: Dict[str, Any] = Field(..., description="Métricas do sistema")
-    claude_sdk: Dict[str, Any] = Field(..., description="Status do Claude CODE SDK")
+    claude_sdk: Dict[str, Any] = Field(..., description="Status do Hackathon Flow Blockchain Agents")
     performance: Dict[str, Any] = Field(..., description="Métricas de performance")
     stability: Dict[str, Any] = Field(..., description="Status de estabilidade e circuit breakers")
     fallback_stats: Dict[str, Any] = Field(..., description="Estatísticas dos fallbacks")
@@ -625,7 +625,7 @@ async def root() -> HealthResponse:
     Inclui:
     - Status de sessões ativas
     - Uso de memória e CPU  
-    - Status de conexão com Claude CODE SDK
+    - Status de conexão com Hackathon Flow Blockchain Agents
     - Métricas de performance
     - Tempo de atividade
     """,
@@ -652,7 +652,7 @@ async def detailed_health() -> DetailedHealthResponse:
     # Métricas do sistema
     system_metrics = get_system_metrics()
     
-    # Status do Claude CODE SDK
+    # Status do Hackathon Flow Blockchain Agents
     claude_status = await check_claude_sdk_health()
     
     # Métricas de performance
@@ -910,7 +910,7 @@ async def web_chat(chat_message: SecureChatMessage) -> StreamingResponse:
 async def send_message(chat_message: SecureChatMessage) -> StreamingResponse:
     """Envia mensagem para Claude e retorna resposta em streaming."""
     
-    # Se não há session_id, deixa None para Claude CODE SDK criar
+    # Se não há session_id, deixa None para Hackathon Flow Blockchain Agents criar
     session_id = chat_message.session_id
     
     # Log início da mensagem

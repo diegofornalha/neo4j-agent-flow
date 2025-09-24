@@ -24,7 +24,7 @@ from core.session_manager import ClaudeCodeSessionManager
 
 # Inicializar FastAPI
 app = FastAPI(
-    title="Neo4j Agent - Claude CODE SDK Proxy",
+    title="Neo4j Agent - Hackathon Flow Blockchain Agents Proxy",
     description="Proxy REST que encapsula Claude Code SDK com SSE streaming",
     version="1.0.0"
 )
@@ -59,7 +59,7 @@ async def health_check():
     return {
         "status": "healthy",
         "timestamp": datetime.now().isoformat(),
-        "service": "Claude CODE SDK Proxy",
+        "service": "Hackathon Flow Blockchain Agents Proxy",
         "sdk_available": True,
         "sessions_active": len(session_manager.get_active_sessions())
     }

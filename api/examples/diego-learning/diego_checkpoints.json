@@ -1,0 +1,74 @@
+{
+  "week_1": {
+    "title": "Fundamentos do Flow MCP",
+    "topics": [
+      "Instalar e configurar Flow MCP no Cursor",
+      "Executar primeira consulta de saldo",
+      "Buscar informa\u00e7\u00e3o de conta",
+      "Recuperar c\u00f3digo de contrato",
+      "Entender estrutura de contas Flow"
+    ],
+    "points": 10,
+    "status": "pending"
+  },
+  "week_2": {
+    "title": "Flow DeFi MCP Tools",
+    "topics": [
+      "Consultar pre\u00e7os de tokens",
+      "Analisar pools de liquidez",
+      "Executar swap simulado",
+      "Monitorar hist\u00f3rico de pre\u00e7os",
+      "Gerenciar tokens ERC20"
+    ],
+    "points": 15,
+    "status": "pending"
+  },
+  "week_3": {
+    "title": "Eliza Framework",
+    "topics": [
+      "Configurar ambiente Eliza",
+      "Criar primeiro agente",
+      "Personalizar character",
+      "Integrar com Claude/GPT",
+      "Deploy de agente b\u00e1sico"
+    ],
+    "points": 20,
+    "status": "pending"
+  },
+  "week_4": {
+    "title": "Plugin Development",
+    "topics": [
+      "Estrutura de plugin",
+      "Criar a\u00e7\u00f5es customizadas",
+      "Implementar servi\u00e7os",
+      "Testar plugin localmente",
+      "Publicar no registry"
+    ],
+    "points": 15,
+    "status": "pending"
+  },
+  "week_5": {
+    "title": "AgentKit Integration",
+    "topics": [
+      "Setup AgentKit com Flow",
+      "Configurar LLM (Claude/GPT)",
+      "Implementar wallet Viem",
+      "Criar agente aut\u00f4nomo",
+      "Executar transa\u00e7\u00f5es"
+    ],
+    "points": 20,
+    "status": "pending"
+  },
+  "week_6": {
+    "title": "Projeto Final",
+    "topics": [
+      "Combinar todas as ferramentas",
+      "Criar DeFi Dashboard",
+      "Implementar chat interface",
+      "Adicionar automa\u00e7\u00e3o",
+      "Deploy em produ\u00e7\u00e3o"
+    ],
+    "points": 20,
+    "status": "pending"
+  }
+}
