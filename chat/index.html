@@ -59,9 +59,7 @@
             word-wrap: break-word;
         }
         .copy-btn {
-            position: absolute;
-            top: 5px;
-            right: 5px;
+            display: inline-block;
             background: #000;
             color: #00ff00;
             border: 1px solid #00ff00;
@@ -71,6 +69,8 @@
             font-family: monospace;
             opacity: 0.3;
             transition: opacity 0.2s;
+            margin-left: 10px;
+            vertical-align: middle;
         }
         .message:hover .copy-btn {
             opacity: 1;
@@ -119,16 +119,15 @@
             <input type="text" id="messageInput" placeholder="Digite sua mensagem..." style="flex: 1; max-width: 400px;">
             <button onclick="sendMessage()">Enviar</button>
             <button onclick="testConnection()">Testar API</button>
-            <button onclick="clearMessages()">Limpar</button>
-            <button onclick="toggleDebug()">Debug</button>
+            <button onclick="clearDebug()">Limpar</button>
         </div>
 
         <div class="debug-panel" id="status">
             [STATUS] Inicializando...
         </div>
 
-        <div class="debug-panel" id="debug" style="display: none;">
-            [DEBUG] Console de debug
+        <div class="debug-panel" id="debug">
+            [DEBUG] Console de debug ativo
         </div>
     </div>
 
@@ -138,11 +137,9 @@
 
         function log(message, type = 'info') {
             const debugPanel = document.getElementById('debug');
-            if (debugPanel.style.display !== 'none') {
-                const timestamp = new Date().toLocaleTimeString();
-                debugPanel.innerHTML += `\n[${timestamp}] ${message}`;
-                debugPanel.scrollTop = debugPanel.scrollHeight;
-            }
+            const timestamp = new Date().toLocaleTimeString();
+            debugPanel.innerHTML += `\n[${timestamp}] ${message}`;
+            debugPanel.scrollTop = debugPanel.scrollHeight;
             console.log(`[DEBUG] ${message}`);
         }
 
@@ -174,6 +171,7 @@
         }
 
         let messageIdCounter = 0;
+        let currentStreamingMessageDiv = null;
 
         function addMessage(content, isUser = false) {
             const messagesDiv = document.getElementById('messages');
@@ -182,22 +180,57 @@
             messageDiv.className = `message ${isUser ? 'info' : 'success'}`;
             messageDiv.id = messageId;
 
-            // Adiciona botão de copiar
-            const copyBtn = document.createElement('button');
-            copyBtn.className = 'copy-btn';
-            copyBtn.textContent = '📋';
-            copyBtn.onclick = () => copyMessage(content, copyBtn);
+            // Cria container para o conteúdo
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
 
             // Renderiza markdown para mensagens do Claude
             if (!isUser) {
-                messageDiv.innerHTML = `<span style="color: ${isUser ? '#00ffff' : '#00ff00'}">🤖 CLAUDE:</span><br>${renderMarkdown(content)}`;
+                contentDiv.innerHTML = `<span style="color: ${isUser ? '#00ffff' : '#00ff00'}">🤖 CLAUDE:</span><br>${renderMarkdown(content)}`;
             } else {
-                messageDiv.innerHTML = `<span style="color: #00ffff">👤 USER:</span><br>${content.replace(/\n/g, '<br>')}`;
+                contentDiv.innerHTML = `<span style="color: #00ffff">👤 USER:</span><br>${content.replace(/\n/g, '<br>')}`;
             }
+
+            messageDiv.appendChild(contentDiv);
+
+            // Adiciona botão de copiar no final
+            const copyBtn = document.createElement('button');
+            copyBtn.className = 'copy-btn';
+            copyBtn.textContent = '📋 Copiar';
+            copyBtn.onclick = () => copyMessage(content, copyBtn);
 
             messageDiv.appendChild(copyBtn);
             messagesDiv.appendChild(messageDiv);
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+            // Se não for do usuário, guarda referência para streaming
+            if (!isUser) {
+                currentStreamingMessageDiv = messageDiv;
+            }
+        }
+
+        function updateStreamingMessage(content, isUser = false) {
+            if (!currentStreamingMessageDiv) {
+                // Se não há mensagem de streaming, cria uma nova
+                addMessage(content, isUser);
+                return;
+            }
+
+            // Atualiza o conteúdo da mensagem existente
+            const contentDiv = currentStreamingMessageDiv.querySelector('.message-content');
+            if (contentDiv) {
+                contentDiv.innerHTML = `<span style="color: #00ff00">🤖 CLAUDE:</span><br>${renderMarkdown(content)}`;
+
+                // Atualiza o botão de copiar com o novo conteúdo
+                const copyBtn = currentStreamingMessageDiv.querySelector('.copy-btn');
+                if (copyBtn) {
+                    copyBtn.onclick = () => copyMessage(content, copyBtn);
+                }
+
+                // Mantém o scroll no final
+                const messagesDiv = document.getElementById('messages');
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            }
         }
 
         async function copyMessage(text, button) {
@@ -211,7 +244,7 @@
 
                 // Feedback visual
                 const originalText = button.textContent;
-                button.textContent = '✅';
+                button.textContent = '✅ Copiado!';
                 button.classList.add('copied');
 
                 setTimeout(() => {
@@ -231,9 +264,9 @@
                 textArea.select();
                 try {
                     document.execCommand('copy');
-                    button.textContent = '✅';
+                    button.textContent = '✅ Copiado!';
                     setTimeout(() => {
-                        button.textContent = '📋';
+                        button.textContent = '📋 Copiar';
                     }, 2000);
                 } catch (err) {
                     log('Fallback de cópia também falhou', 'error');
@@ -283,9 +316,13 @@
                 return;
             }
 
+            log(`📤 Enviando: "${message}"`);
             addMessage(message, true);
             input.value = '';
             updateStatus('Enviando mensagem...', 'info');
+
+            // Limpa mensagem de streaming anterior
+            currentStreamingMessageDiv = null;
 
             const payload = {
                 message: message,
@@ -297,6 +334,8 @@
                 payload.session_id = sessionId;
             }
 
+            log(`Payload: ${JSON.stringify(payload)}`);
+
             try {
                 const response = await fetch(`${API_URL}/api/chat`, {
                     method: 'POST',
@@ -305,6 +344,9 @@
                     },
                     body: JSON.stringify(payload)
                 });
+
+                log(`Response status: ${response.status}`);
+                log(`Response headers: ${JSON.stringify([...response.headers.entries()])}`);
 
                 if (!response.ok) {
                     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -335,36 +377,40 @@
                                 // Log mais limpo baseado no tipo de evento
                                 if (data.type === 'session_created' && data.session_id) {
                                     sessionId = data.session_id;
-                                    // Silencioso - apenas atualiza a sessão
+                                    log(`📌 Sessão criada: ${data.session_id}`);
                                 }
                                 else if (data.type === 'processing') {
-                                    // Silencioso - já mostra no status
+                                    log('⏳ Processando...');
+                                    updateStatus('Claude está processando...', 'info');
                                 }
                                 else if (data.type === 'content' || data.type === 'text' || data.type === 'text_chunk') {
                                     const content = data.content || data.text || '';
                                     fullResponse += content;
-                                    streamBuffer += content;
 
-                                    // Mostra o buffer acumulado quando:
-                                    // - Tem mais de 80 caracteres
-                                    // - Tem quebra de linha
-                                    // - Termina com pontuação (. ! ? :)
-                                    const shouldFlush =
-                                        streamBuffer.length > 80 ||
-                                        content.includes('\n') ||
-                                        /[.!?:]$/.test(streamBuffer.trim()) ||
-                                        content.includes('##') ||  // Headers markdown
-                                        content.includes('**');     // Bold markdown
+                                    // Atualiza a mensagem em tempo real
+                                    updateStreamingMessage(fullResponse, false);
 
-                                    if (shouldFlush && streamBuffer.trim()) {
-                                        // Apenas limpa o buffer sem logar cada chunk
-                                        streamBuffer = '';
+                                    // Log para debug
+                                    if (content.length > 0) {
+                                        log(`💬 Streaming: ${content.substring(0, 50)}${content.length > 50 ? '...' : ''}`);
                                     }
                                 }
                                 else if (data.type === 'done') {
-                                    // Limpa silenciosamente
-                                    streamBuffer = '';
+                                    log('✅ Resposta completa');
+                                    updateStatus('Resposta recebida', 'success');
+                                    // Garante que a mensagem final está completa
+                                    if (fullResponse) {
+                                        updateStreamingMessage(fullResponse, false);
+                                    }
+                                    // Limpa a referência para próxima mensagem
+                                    currentStreamingMessageDiv = null;
                                     break;
+                                }
+                                else if (data.type === 'tool_use') {
+                                    log(`📡 tool_use: ${data.name || 'ferramenta'}`);
+                                }
+                                else if (data.type === 'tool_result') {
+                                    log(`🔧 tool_result recebido`);
                                 }
                                 else if (data.type === 'error') {
                                     log(`❌ Erro: ${data.error}`, 'error');
@@ -372,11 +418,11 @@
                                     break;
                                 }
                                 else if (data.type === 'result') {
-                                    // Ignora eventos de resultado (métricas)
+                                    log(`📊 Resultado: ${JSON.stringify(data).substring(0, 100)}...`);
                                     continue;
                                 }
-                                else {
-                                    // Ignora outros eventos silenciosamente
+                                else if (data.type) {
+                                    log(`🔔 Evento: ${data.type}`);
                                     continue;
                                 }
 
@@ -387,10 +433,7 @@
                     }
                 }
 
-                if (fullResponse) {
-                    addMessage(fullResponse, false);
-                    updateStatus('Resposta recebida', 'success');
-                } else {
+                if (!fullResponse) {
                     log('⚠️ Resposta vazia', 'error');
                     updateStatus('Resposta vazia', 'error');
                 }
@@ -403,19 +446,10 @@
             }
         }
 
-        function clearMessages() {
+        function clearDebug() {
+            document.getElementById('debug').innerHTML = '[DEBUG] Console limpo';
             document.getElementById('messages').innerHTML = '';
-            updateStatus('Mensagens limpas', 'info');
-        }
-
-        function toggleDebug() {
-            const debugPanel = document.getElementById('debug');
-            if (debugPanel.style.display === 'none') {
-                debugPanel.style.display = 'block';
-                debugPanel.innerHTML = '[DEBUG] Console ativo\n';
-            } else {
-                debugPanel.style.display = 'none';
-            }
+            log('Console limpo');
         }
 
         // Enter para enviar
