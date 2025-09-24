@@ -50,11 +50,39 @@
             margin-bottom: 10px;
         }
         .message {
+            position: relative;
             margin: 10px 0;
             padding: 10px;
+            padding-right: 40px;
             border-left: 3px solid #00ff00;
             white-space: pre-wrap;
             word-wrap: break-word;
+        }
+        .copy-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: #000;
+            color: #00ff00;
+            border: 1px solid #00ff00;
+            padding: 3px 8px;
+            font-size: 12px;
+            cursor: pointer;
+            font-family: monospace;
+            opacity: 0.3;
+            transition: opacity 0.2s;
+        }
+        .message:hover .copy-btn {
+            opacity: 1;
+        }
+        .copy-btn:hover {
+            background: #00ff00;
+            color: #000;
+        }
+        .copy-btn.copied {
+            background: #00ff00;
+            color: #000;
+            opacity: 1;
         }
         .message h1, .message h2, .message h3 {
             color: #00ff00;
@@ -145,10 +173,20 @@
                 .replace(/\n/g, '<br>');
         }
 
+        let messageIdCounter = 0;
+
         function addMessage(content, isUser = false) {
             const messagesDiv = document.getElementById('messages');
             const messageDiv = document.createElement('div');
+            const messageId = `msg-${messageIdCounter++}`;
             messageDiv.className = `message ${isUser ? 'info' : 'success'}`;
+            messageDiv.id = messageId;
+
+            // Adiciona botão de copiar
+            const copyBtn = document.createElement('button');
+            copyBtn.className = 'copy-btn';
+            copyBtn.textContent = '📋';
+            copyBtn.onclick = () => copyMessage(content, copyBtn);
 
             // Renderiza markdown para mensagens do Claude
             if (!isUser) {
@@ -157,8 +195,51 @@
                 messageDiv.innerHTML = `<span style="color: #00ffff">👤 USER:</span><br>${content.replace(/\n/g, '<br>')}`;
             }
 
+            messageDiv.appendChild(copyBtn);
             messagesDiv.appendChild(messageDiv);
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        async function copyMessage(text, button) {
+            try {
+                // Remove tags HTML para copiar apenas o texto puro
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = renderMarkdown(text);
+                const plainText = tempDiv.textContent || tempDiv.innerText || text;
+
+                await navigator.clipboard.writeText(plainText);
+
+                // Feedback visual
+                const originalText = button.textContent;
+                button.textContent = '✅';
+                button.classList.add('copied');
+
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.classList.remove('copied');
+                }, 2000);
+
+                log('Mensagem copiada para clipboard');
+            } catch (err) {
+                log('Erro ao copiar: ' + err.message, 'error');
+                // Fallback para browsers antigos
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                textArea.style.position = 'fixed';
+                textArea.style.opacity = '0';
+                document.body.appendChild(textArea);
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    button.textContent = '✅';
+                    setTimeout(() => {
+                        button.textContent = '📋';
+                    }, 2000);
+                } catch (err) {
+                    log('Fallback de cópia também falhou', 'error');
+                }
+                document.body.removeChild(textArea);
+            }
         }
 
         async function testConnection() {
