@@ -270,8 +270,6 @@ class StepByStepTester:
 
         docs_to_check = [
             "bootcamp-ai-agents-flow.md",
-            "guia-rapido-eliza-flow.md",
-            "guia-desenvolvimento-plugins-eliza.md",
             "guia-agentkit-flow.md",
             "flow-mcp-protocol.md",
             "usar-flow-mcp-cursor.md",

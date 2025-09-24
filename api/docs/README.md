@@ -20,7 +20,6 @@
 | 1️⃣ Fundamentos | 🟢 ATIVO | [bootcamp-ai-agents-flow.md](./bootcamp-ai-agents-flow.md) | 0/30 pontos |
 | 2️⃣ Core Dev | 🔒 | [flow-mcp-protocol.md](./flow-mcp-protocol.md) | Requer 31 pts |
 | 3️⃣ AI Agents | 🔒 | [guia-agentkit-flow.md](./guia-agentkit-flow.md) | Requer 61 pts |
-| 4️⃣ Expert | 🔒 | [guia-desenvolvimento-plugins-eliza.md](./guia-desenvolvimento-plugins-eliza.md) | Requer 86 pts |
 
 ## 🎯 Objetivo do Bootcamp
 
@@ -39,17 +38,6 @@ Transformar você em expert capaz de:
 - Casos de uso práticos
 - Arquitetura de implementação
 
-### 2. [Guia Rápido Eliza no Flow](./guia-rapido-eliza-flow.md)
-- Configuração do ambiente Eliza
-- Criação do primeiro agente conversacional
-- Personalização de personagens
-- Integração com modelos de IA
-
-### 3. [Desenvolvimento de Plugins Eliza](./guia-desenvolvimento-plugins-eliza.md)
-- Criação de plugins personalizados
-- Implementação de ações e serviços
-- Injeção de dependência
-- Publicação no registro de plugins
 
 ### 4. [AgentKit no Flow](./guia-agentkit-flow.md)
 - Configuração rápida com AgentKit
@@ -143,8 +131,6 @@ neo4j-agent-flow/
 │   └── server.py          # Servidor principal
 ├── docs/                  # Documentação do bootcamp
 │   ├── bootcamp-ai-agents-flow.md
-│   ├── guia-rapido-eliza-flow.md
-│   ├── guia-desenvolvimento-plugins-eliza.md
 │   ├── guia-agentkit-flow.md
 │   ├── flow-mcp-protocol.md
 │   └── usar-flow-mcp-cursor.md
@@ -196,7 +182,6 @@ Contribuições são bem-vindas! Para contribuir:
 
 ### Documentação Oficial
 - [Flow Developers](https://developers.flow.com)
-- [Eliza Framework](https://elizaos.github.io/eliza)
 - [AgentKit Docs](https://docs.agentkit.com)
 - [Claude API](https://docs.anthropic.com)
 

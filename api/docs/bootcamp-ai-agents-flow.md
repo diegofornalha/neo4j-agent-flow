@@ -107,7 +107,6 @@ Construir um agente completo com AgentKit que gerencia um portfólio DeFi.
 ## Recursos Adicionais
 
 - [Documentação oficial do Flow](https://developers.flow.com)
-- [Eliza Framework](https://github.com/elizaos/eliza)
 - [AgentKit Documentation](https://docs.agentkit.com)
 - [Claude Code SDK](https://claude.ai/docs/sdk)
 

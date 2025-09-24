@@ -26,8 +26,6 @@
 - [ ] Hello World em Cadence
 
 #### Documentos de Referência
-- `bootcamp-ai-agents-flow.md` - Visão geral do bootcamp
-- `guia-rapido-eliza-flow.md` - Início rápido com Eliza
 
 **Checkpoint 1**: Criar e deployar primeiro smart contract simples (+10 pontos)
 
@@ -72,9 +70,6 @@
 - [ ] Automação de tarefas on-chain
 
 #### Documentos de Referência
-- `guia-desenvolvimento-plugins-eliza.md` - Plugins para Eliza
-- `usar-flow-mcp-cursor.md` - MCP com Cursor
-
 **Checkpoint 3**: Criar agente AI que interage com Flow (+15 pontos)
 
 ---
@@ -147,8 +142,6 @@
 ├── bootcamp-ai-agents-flow.md         # Material do bootcamp
 ├── flow-mcp-protocol.md               # Protocolo MCP
 ├── guia-agentkit-flow.md              # AgentKit
-├── guia-desenvolvimento-plugins-eliza.md # Plugins
-├── guia-rapido-eliza-flow.md          # Quick start
 ├── timeline-aprendizado-flow-mcp.md   # Timeline
 └── usar-flow-mcp-cursor.md            # Cursor IDE
 

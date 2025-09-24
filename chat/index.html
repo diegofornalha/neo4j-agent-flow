@@ -119,6 +119,7 @@
             <input type="text" id="messageInput" placeholder="Digite sua mensagem..." style="flex: 1; max-width: 400px;">
             <button onclick="sendMessage()">Enviar</button>
             <button onclick="testConnection()">Testar API</button>
+            <button onclick="checkFlowBalance()">💰 Saldo Flow</button>
             <button onclick="clearDebug()">Limpar</button>
         </div>
 
@@ -456,6 +457,17 @@
         document.getElementById('messageInput').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') sendMessage();
         });
+
+        // Função para verificar saldo Flow
+        async function checkFlowBalance() {
+            log('💰 Consultando saldo Flow...');
+            updateStatus('Consultando blockchain Flow...', 'info');
+
+            // Envia mensagem perguntando o saldo
+            const input = document.getElementById('messageInput');
+            input.value = 'Qual o saldo da minha conta Flow 0x25f823e2a115b2dc?';
+            await sendMessage();
+        }
 
         // Inicialização
         window.addEventListener('load', () => {
