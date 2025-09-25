@@ -29,6 +29,12 @@
 			"aliases": {
 				"testnet": "36395f9dde50ea27"
 			}
+		},
+		"WaveNFT": {
+			"source": "./contracts/WaveNFT_Standalone.cdc",
+			"aliases": {
+				"testnet": "36395f9dde50ea27"
+			}
 		}
 	},
 	"dependencies": {
@@ -113,9 +119,7 @@
 		"testnet": {
 			"bootcamp-account": [
 				"WaveNameService",
-				"QuizPassNFT",
-				"QuizRace",
-				"FlowAgentActions"
+				"WaveNFT"
 			]
 		}
 	}
