@@ -119,7 +119,6 @@
             <input type="text" id="messageInput" placeholder="Digite sua mensagem..." style="flex: 1; max-width: 400px;">
             <button onclick="sendMessage()">Enviar</button>
             <button onclick="testConnection()">Testar API</button>
-            <button onclick="checkFlowBalance()">💰 Saldo Flow</button>
             <button onclick="clearDebug()">Limpar</button>
         </div>
 
@@ -197,7 +196,7 @@
             // Adiciona botão de copiar no final
             const copyBtn = document.createElement('button');
             copyBtn.className = 'copy-btn';
-            copyBtn.textContent = '📋 Copiar';
+            copyBtn.textContent = '📋';
             copyBtn.onclick = () => copyMessage(content, copyBtn);
 
             messageDiv.appendChild(copyBtn);
@@ -267,7 +266,7 @@
                     document.execCommand('copy');
                     button.textContent = '✅ Copiado!';
                     setTimeout(() => {
-                        button.textContent = '📋 Copiar';
+                        button.textContent = '📋';
                     }, 2000);
                 } catch (err) {
                     log('Fallback de cópia também falhou', 'error');
