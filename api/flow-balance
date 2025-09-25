@@ -11,7 +11,7 @@ NC='\033[0m' # No Color
 
 # Endere\u00e7o padr\u00e3o (pode ser sobrescrito)
 DEFAULT_ADDRESS="0x25f823e2a115b2dc"
-DEFAULT_NETWORK="mainnet"
+DEFAULT_NETWORK="testnet"  # Sempre usar testnet
 
 # Usa argumentos ou valores padr\u00e3o
 ADDRESS=${1:-$DEFAULT_ADDRESS}
@@ -30,7 +30,7 @@ if ! command -v python3 &> /dev/null; then
 fi
 
 # Executa o script Python
-python3 check_flow_balance_mcp.py "$ADDRESS" "$NETWORK"
+python3 scripts/check_flow_balance_mcp.py "$ADDRESS" "$NETWORK"
 
 # Adiciona ajuda se nenhum argumento foi passado
 if [ $# -eq 0 ]; then
