@@ -1,0 +1,82 @@
+#!/usr/bin/env python3
+"""
+Script simples e robusto para verificar saldo Flow
+"""
+
+import json
+import sys
+import subprocess
+
+def check_flow_balance(address, network='mainnet'):
+    # Remove 0x se presente
+    if address.startswith('0x'):
+        address = address[2:]
+
+    # APIs por rede
+    apis = {
+        'mainnet': 'https://rest-mainnet.onflow.org',
+        'testnet': 'https://rest-testnet.onflow.org'
+    }
+
+    api_url = apis.get(network, apis['mainnet'])
+
+    print(f"\n{'=' * 50}")
+    print(f"FLOW BALANCE CHECKER")
+    print(f"{'=' * 50}")
+    print(f"Address: 0x{address}")
+    print(f"Network: {network}")
+    print(f"{'-' * 50}")
+
+    # Busca dados da conta
+    cmd = f'curl -s "{api_url}/v1/accounts/{address}"'
+    result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+
+    try:
+        data = json.loads(result.stdout)
+
+        if 'code' in data and data['code'] >= 400:
+            print(f"[ERROR] {data.get('message', 'Account not found')}")
+            print(f"\nPossible reasons:")
+            print("- Invalid address format")
+            print("- Account doesn't exist on this network")
+            print("- Wrong network (try testnet instead of mainnet)")
+            return False
+
+        # Calcula saldo
+        balance = int(data.get('balance', 0))
+        flow_balance = balance / 100_000_000
+
+        print(f"\n[SUCCESS] Account found!")
+        print(f"Balance: {flow_balance:,.8f} FLOW")
+
+        if flow_balance >= 1:
+            print(f"         ({flow_balance:,.2f} FLOW)")
+
+        print(f"{'=' * 50}")
+
+        if flow_balance > 0:
+            print("[OK] Account has balance")
+        else:
+            print("[WARNING] Zero balance")
+            if network == 'testnet':
+                print("Get free FLOW: https://testnet-faucet.onflow.org/")
+
+        return True
+
+    except Exception as e:
+        print(f"[ERROR] Failed to process response: {e}")
+        return False
+
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print("Usage: ./flow-check <address> [network]")
+        print("\nExamples:")
+        print("  ./flow-check 0x1654653399040a61")
+        print("  ./flow-check 0x01cf0e2f2f715450 testnet")
+        sys.exit(1)
+
+    address = sys.argv[1]
+    network = sys.argv[2] if len(sys.argv) > 2 else 'mainnet'
+
+    success = check_flow_balance(address, network)
+    sys.exit(0 if success else 1)
