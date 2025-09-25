@@ -1,0 +1,5 @@
+{
+  "private_key": "c4bbb40386ff9c2c6f3bd84a8b43491f96163ed55ce4c291c3cd625b1a6bddf3",
+  "public_key": "63f40b6701ead5d0ae370c808485094a9c30eb27cb337ecfdba0596f456295f112c96acb36cf23ea51c1db365c788179ac4aa89d535bfddf863588dbc907961e",
+  "instructions": "Use the faucet to create account, then update .env"
+}
