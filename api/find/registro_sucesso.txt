@@ -1,5 +1,0 @@
-Nome registrado: surfista135709.find
-Transaction ID: 2628497d47fd85fb6d0dff2f9826b04f487fd8acb1f87a0ab38ed2ea793e26f5
-Conta: 0x36395f9dde50ea27
-Data: 2025-09-25 13:57:18.269747
-URL: https://testnet.flowscan.io/tx/2628497d47fd85fb6d0dff2f9826b04f487fd8acb1f87a0ab38ed2ea793e26f5

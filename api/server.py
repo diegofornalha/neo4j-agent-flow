@@ -265,10 +265,16 @@ async def get_flow_balance(address: str):
                     balance = int(data.get('balance', 0))
                     flow_balance = balance / 100_000_000
 
+                    # Formatar para mostrar 101,000 sem decimais desnecessários
+                    if flow_balance >= 1000:
+                        balance_formatted = f"{flow_balance:,.0f}"
+                    else:
+                        balance_formatted = f"{flow_balance:.4f} FLOW"
+
                     return {
                         "address": f"0x{address}",
                         "balance": flow_balance,
-                        "balance_formatted": f"{flow_balance:.4f} FLOW",
+                        "balance_formatted": balance_formatted,
                         "network": "testnet",
                         "timestamp": datetime.now().isoformat()
                     }
@@ -294,7 +300,8 @@ async def get_default_flow_balance():
     """
     Busca o saldo da conta padrão do projeto na testnet.
     """
-    default_address = "0x25f823e2a115b2dc"
+    # Conta com 101,000 FLOW
+    default_address = "0x36395f9dde50ea27"
     return await get_flow_balance(default_address)
 
 # ========== ENDPOINTS FNS COM NEO4J ==========
