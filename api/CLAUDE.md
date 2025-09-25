@@ -1,5 +1,17 @@
 # Instruções Importantes para Claude - Flow Blockchain Project
 
+## 📁 ORGANIZAÇÃO DE ARQUIVOS: NUNCA CRIAR ARQUIVOS NA RAIZ
+
+**REGRA CRÍTICA**: NUNCA crie arquivos soltos na pasta raiz `/api/`. Sempre organize em pastas específicas:
+
+- **Novos recursos**: Criar pasta dedicada (ex: `/api/find/` para FNS)
+- **Scripts**: Usar `/api/scripts/`
+- **Hooks**: Usar `/api/hooks/`
+- **Comandos**: Usar `/api/.claude/commands/`
+- **Agentes**: Usar `/api/.claude/agents/`
+
+Antes de criar qualquer arquivo, pergunte-se: "Este arquivo está em uma pasta apropriada?"
+
 ## 🚨 CONFIGURAÇÃO CRÍTICA: USAR APENAS TESTNET
 
 Este projeto está configurado para usar **EXCLUSIVAMENTE A TESTNET** da Flow Blockchain.
