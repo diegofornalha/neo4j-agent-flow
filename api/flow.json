@@ -80,12 +80,12 @@
   },
   "accounts": {
     "bootcamp-account": {
-      "address": "0x01cf0e2f2f715450",
+      "address": "0x36395f9dde50ea27",
       "key": {
         "type": "hex",
         "index": 0,
-        "signatureAlgorithm": "ECDSA_P256",
-        "hashAlgorithm": "SHA3_256",
+        "signatureAlgorithm": "ECDSA_secp256k1",
+        "hashAlgorithm": "SHA2_256",
         "privateKey": "$FLOW_PRIVATE_KEY"
       }
     },
