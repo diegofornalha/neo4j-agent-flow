@@ -18,8 +18,6 @@ import subprocess
 # Adicionar src ao path
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(__file__)), 'src'))
 
-# Importar FCL Bridge
-from flow_fcl_integration import fcl_bridge, add_fcl_endpoints
 # Importar .find Name Service
 from flow_agents.find_api_endpoints import add_find_endpoints
 
@@ -39,9 +37,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Servir arquivos estáticos (FCL client)
-from fastapi.staticfiles import StaticFiles
-app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # ========================================
 # MODELS
@@ -414,8 +409,6 @@ async def websocket_endpoint(websocket: WebSocket):
 @app.on_event("startup")
 async def startup_event():
     """Inicialização do servidor"""
-    # Adiciona endpoints FCL
-    await add_fcl_endpoints(app)
     # Adiciona endpoints .find Name Service
     add_find_endpoints(app)
 

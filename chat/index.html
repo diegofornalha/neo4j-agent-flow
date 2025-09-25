@@ -14,6 +14,39 @@
         .container {
             max-width: 800px;
             margin: 0 auto;
+            position: relative;
+        }
+        .flow-balance {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #000;
+            border: 1px solid #00ff00;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .flow-balance .flow-icon {
+            width: 20px;
+            height: 20px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .flow-balance .balance {
+            color: #00ff00;
+            font-weight: bold;
+        }
+        .flow-balance.loading {
+            opacity: 0.5;
+        }
+        .flow-balance .label {
+            color: #888;
+            font-size: 10px;
+            text-transform: uppercase;
         }
         .debug-panel {
             background: #000;
@@ -110,6 +143,15 @@
     </style>
 </head>
 <body>
+    <!-- Flow Balance Display -->
+    <div class="flow-balance" id="flowBalance">
+        <span class="flow-icon">💰</span>
+        <div>
+            <div class="label">Flow Testnet</div>
+            <div class="balance" id="balanceAmount">Carregando...</div>
+        </div>
+    </div>
+
     <div class="container">
         <h1>🔧 Hackathon Flow Blockchain Agents</h1>
 
@@ -134,6 +176,53 @@
     <script>
         const API_URL = 'http://localhost:8991';
         let sessionId = null;
+        const FLOW_ADDRESS = '0x25f823e2a115b2dc'; // Endereço padrão do projeto
+
+        // Função para buscar e atualizar o saldo Flow
+        async function updateFlowBalance() {
+            const balanceDiv = document.getElementById('flowBalance');
+            const balanceAmount = document.getElementById('balanceAmount');
+
+            try {
+                balanceDiv.classList.add('loading');
+
+                // Primeiro tenta buscar do nosso backend
+                let response = await fetch(`${API_URL}/api/flow/balance`);
+
+                if (!response.ok) {
+                    // Se falhar, busca direto da API Flow
+                    response = await fetch(`https://rest-testnet.onflow.org/v1/accounts/${FLOW_ADDRESS}`);
+                    const data = await response.json();
+
+                    if (data.balance !== undefined) {
+                        const flowBalance = (parseInt(data.balance) / 100000000).toFixed(4);
+                        balanceAmount.textContent = `${flowBalance} FLOW`;
+                    } else {
+                        balanceAmount.textContent = 'Erro ao carregar';
+                    }
+                } else {
+                    // Usa resposta do backend
+                    const data = await response.json();
+                    balanceAmount.textContent = data.balance_formatted || `${data.balance.toFixed(4)} FLOW`;
+                }
+
+                balanceDiv.classList.remove('loading');
+                log(`Saldo Flow atualizado: ${balanceAmount.textContent}`);
+
+            } catch (error) {
+                console.error('Erro ao buscar saldo Flow:', error);
+                balanceAmount.textContent = 'Offline';
+                balanceDiv.classList.remove('loading');
+            }
+        }
+
+        // Atualizar saldo a cada 30 segundos
+        setInterval(updateFlowBalance, 30000);
+
+        // Buscar saldo ao carregar a página
+        window.addEventListener('load', () => {
+            updateFlowBalance();
+        });
 
         function log(message, type = 'info') {
             const debugPanel = document.getElementById('debug');

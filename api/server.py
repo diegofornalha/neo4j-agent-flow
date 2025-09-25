@@ -12,7 +12,8 @@ import json
 import uuid
 import os
 import sys
-from typing import Dict, Any, AsyncGenerator
+import aiohttp
+from typing import Dict, Any, AsyncGenerator, Optional
 from datetime import datetime
 
 # Adicionar paths do SDK
@@ -219,6 +220,57 @@ async def sdk_status():
         "sessions_active": len(session_manager.get_active_sessions()),
         "timestamp": datetime.now().isoformat()
     }
+
+# Endpoint para buscar saldo Flow
+@app.get("/api/flow/balance/{address}")
+async def get_flow_balance(address: str):
+    """
+    Busca o saldo de uma conta Flow na testnet.
+    """
+    # Remove 0x prefix se presente
+    if address.startswith('0x'):
+        address = address[2:]
+
+    try:
+        async with aiohttp.ClientSession() as session:
+            url = f"https://rest-testnet.onflow.org/v1/accounts/{address}"
+            async with session.get(url) as response:
+                if response.status == 200:
+                    data = await response.json()
+                    balance = int(data.get('balance', 0))
+                    flow_balance = balance / 100_000_000
+
+                    return {
+                        "address": f"0x{address}",
+                        "balance": flow_balance,
+                        "balance_formatted": f"{flow_balance:.4f} FLOW",
+                        "network": "testnet",
+                        "timestamp": datetime.now().isoformat()
+                    }
+                else:
+                    raise HTTPException(
+                        status_code=404,
+                        detail=f"Account not found on testnet: {address}"
+                    )
+    except aiohttp.ClientError as e:
+        raise HTTPException(
+            status_code=503,
+            detail=f"Failed to connect to Flow testnet: {str(e)}"
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error fetching balance: {str(e)}"
+        )
+
+# Endpoint simplificado para o saldo padrão
+@app.get("/api/flow/balance")
+async def get_default_flow_balance():
+    """
+    Busca o saldo da conta padrão do projeto na testnet.
+    """
+    default_address = "0x25f823e2a115b2dc"
+    return await get_flow_balance(default_address)
 
 # Inicialização
 @app.on_event("startup")
