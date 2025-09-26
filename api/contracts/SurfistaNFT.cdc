@@ -2,6 +2,7 @@ import NonFungibleToken from 0x631e88ae7f1d7c20
 import MetadataViews from 0x631e88ae7f1d7c20
 import FungibleToken from 0x9a0766d93b6608b7
 import FlowToken from 0x7e60df042a9c0868
+import TesouroProtegido from 0x25f823e2a115b2dc
 
 /// SurfistaNFT - NFT única para cada surfista resgatado
 /// Armazena o nome, progresso e "bag de conhecimento" do surfista
@@ -114,8 +115,14 @@ access(all) contract SurfistaNFT: NonFungibleToken {
                 message: "Pagamento insuficiente! Necessário: ".concat(taxaRequerida.toString()).concat(" FLOW")
             )
 
-            // Depositar o pagamento no vault da NFT (conhecimento fica "comprado")
-            self.flowVault.deposit(from: <-pagamento)
+            // Enviar pagamento para o Tesouro Protegido!
+            let tesouro = getAccount(0x25f823e2a115b2dc)
+                .getCapability(TesouroProtegido.TesouroPublicPath)
+                .borrow<&{TesouroProtegido.TesouroPublico}>()
+                ?? panic("Não foi possível acessar o Tesouro Protegido")
+
+            let motivo = "Conhecimento: ".concat(tipo).concat(" - ").concat(descricao)
+            tesouro.depositar(from: <-pagamento, motivo: motivo)
 
             // Adicionar o conhecimento após pagamento
             let conhecimento = Conhecimento(tipo: tipo, descricao: descricao, pontos: pontos)
@@ -366,11 +373,19 @@ access(all) contract SurfistaNFT: NonFungibleToken {
                 nome: nomeFinal
             )
 
-            // Se houver presente inicial de FLOW, depositar no vault da NFT
+            // Se houver presente inicial, enviar para o Tesouro Protegido
             if presenteInicial != nil {
                 let presente <- presenteInicial!
                 let valor = presente.balance
-                surfista.depositarRecompensa(from: <-presente)
+
+                // Acessar o Tesouro Protegido
+                let tesouro = getAccount(0x25f823e2a115b2dc)
+                    .getCapability(TesouroProtegido.TesouroPublicPath)
+                    .borrow<&{TesouroProtegido.TesouroPublico}>()
+                    ?? panic("Não foi possível acessar o Tesouro Protegido")
+
+                let motivo = "Presente de boas-vindas para ".concat(nomeFinal)
+                tesouro.depositar(from: <-presente, motivo: motivo)
 
                 // Dar pontos bonus pelo presente (sem adicionar à bag)
                 surfista.pontosTotal = 100  // Pontos iniciais de resgate
