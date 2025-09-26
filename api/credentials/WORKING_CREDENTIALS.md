@@ -41,7 +41,7 @@ FLOW_TEST_ACCOUNT=0x36395f9dde50ea27
 ## 🚀 PRONTO PARA USO!
 
 Com **101,000 FLOW** disponíveis, podemos:
-- ✅ Registrar nomes .find
+- ✅ Criar NFTs de Surfista
 - ✅ Fazer transações na testnet
 - ✅ Testar todo o sistema do bootcamp
 - ✅ Implementar o sistema de energia do submarino

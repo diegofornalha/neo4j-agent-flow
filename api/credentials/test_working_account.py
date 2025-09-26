@@ -87,10 +87,10 @@ if "SEALED" in result.stdout:
 else:
     print("   ❌ Falhou")
 
-# 3. Testar registro .find
-print("\n3️⃣ PRONTO PARA REGISTRAR .FIND NAMES!")
+# 3. Próximos passos
+print("\n3️⃣ PRONTO PARA TESTAR FUNCIONALIDADES!")
 print("   Com 101,000 FLOW, podemos:")
-print("   - Registrar nomes .find")
+print("   - Criar NFTs de Surfista")
 print("   - Fazer transações")
 print("   - Testar o bootcamp completo!")
 

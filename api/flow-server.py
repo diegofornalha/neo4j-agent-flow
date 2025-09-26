@@ -18,8 +18,7 @@ import subprocess
 # Adicionar src ao path
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(__file__)), 'src'))
 
-# Importar .find Name Service
-from flow_agents.find_api_endpoints import add_find_endpoints
+# Importações removidas - módulo find descontinuado
 
 # Inicializar FastAPI
 app = FastAPI(
@@ -409,8 +408,7 @@ async def websocket_endpoint(websocket: WebSocket):
 @app.on_event("startup")
 async def startup_event():
     """Inicialização do servidor"""
-    # Adiciona endpoints .find Name Service
-    add_find_endpoints(app)
+    # Endpoints find removidos - sistema descontinuado
 
     print("=" * 60)
     print("🌊 FLOW NATIVE AGENT API")

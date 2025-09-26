@@ -155,7 +155,7 @@ DeFi:
 - MetaPier: Lending (0.0015 FLOW gas)
 
 NFT:
-- .find: Register name (0.1 FLOW)
+- SurferNFT: Create surfer (0.1 FLOW)
 - Flowty: List NFT (0.001 FLOW)
 """
 ```

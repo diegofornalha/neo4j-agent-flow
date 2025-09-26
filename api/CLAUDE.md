@@ -217,7 +217,7 @@ Digite qualquer coisa para me ajudar! Pergunte algo, explore um arquivo, qualque
 - Cada arquivo explorado = +5 pontos
 - Cada funcionalidade descoberta = +10 pontos
 - Quiz completo = +50 pontos
-- Nome .find registrado = +100 pontos
+- NFT de Surfista criado = +100 pontos
 
 ### Ranking:
 - 0-50 pontos: 🏄 Surfista Iniciante
