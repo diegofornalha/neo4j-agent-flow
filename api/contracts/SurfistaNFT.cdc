@@ -11,6 +11,10 @@ access(all) contract SurfistaNFT: NonFungibleToken {
     /// Total de NFTs mintadas
     access(all) var totalSupply: UInt64
 
+    /// Registro de nomes para evitar duplicatas
+    /// Mapeia nome base -> quantidade de surfistas com esse nome
+    access(all) var nomeRegistry: {String: UInt64}
+
     /// Eventos padrão NonFungibleToken
     access(all) event ContractInitialized()
     access(all) event Withdraw(id: UInt64, from: Address?)
@@ -20,6 +24,8 @@ access(all) contract SurfistaNFT: NonFungibleToken {
     access(all) event SurfistaResgatado(id: UInt64, nome: String, address: Address)
     access(all) event ConhecimentoAdicionado(id: UInt64, conhecimento: String)
     access(all) event TesouroEncontrado(id: UInt64, tesouro: String, pontos: UInt64)
+    access(all) event InteracaoEntreSurfistas(surfista1: UInt64, surfista2: UInt64, acao: String)
+    access(all) event DesafioMultiplayer(surfista1: UInt64, surfista2: UInt64, tipo: String)
 
     /// Caminhos de storage
     access(all) let CollectionStoragePath: StoragePath
@@ -51,6 +57,8 @@ access(all) contract SurfistaNFT: NonFungibleToken {
         access(all) var bagDeConhecimento: [Conhecimento] // Conhecimentos adquiridos
         access(all) var pontosTotal: UInt64             // Pontos totais acumulados
         access(all) var conquistas: {String: Bool}      // Conquistas desbloqueadas
+        access(all) var amigos: [UInt64]                // IDs dos outros surfistas conhecidos
+        access(all) var mensagensRecebidas: [String]    // Mensagens de outros surfistas
 
         /// Vault embarcado para receber recompensas em FLOW
         access(self) let flowVault: @FlowToken.Vault
@@ -67,13 +75,49 @@ access(all) contract SurfistaNFT: NonFungibleToken {
             self.bagDeConhecimento = []
             self.pontosTotal = 0
             self.conquistas = {}
+            self.amigos = []
+            self.mensagensRecebidas = []
 
             // Criar vault vazio para recompensas
             self.flowVault <- FlowToken.createEmptyVault() as! @FlowToken.Vault
         }
 
-        /// Adiciona conhecimento à bag
-        access(all) fun adicionarConhecimento(tipo: String, descricao: String, pontos: UInt64) {
+        /// Adiciona conhecimento à bag mediante pagamento de taxa
+        /// Taxa: 0.1 FLOW por conhecimento básico, mais caro para conhecimentos raros
+        access(all) fun adicionarConhecimento(
+            tipo: String,
+            descricao: String,
+            pontos: UInt64,
+            pagamento: @FungibleToken.Vault
+        ) {
+            // Calcular taxa baseada no tipo de conhecimento
+            var taxaRequerida = 0.1  // Taxa base
+
+            switch tipo {
+                case "comando":
+                    taxaRequerida = 0.1  // Comandos são baratos
+                case "arquivo":
+                    taxaRequerida = 0.2  // Arquivos custam mais
+                case "funcionalidade":
+                    taxaRequerida = 0.5  // Funcionalidades são caras
+                case "tesouro":
+                    taxaRequerida = 1.0  // Tesouros são muito caros
+                case "conquista":
+                    taxaRequerida = 2.0  // Conquistas são as mais caras
+                default:
+                    taxaRequerida = 0.1
+            }
+
+            // Verificar se o pagamento é suficiente
+            assert(
+                pagamento.balance >= taxaRequerida,
+                message: "Pagamento insuficiente! Necessário: ".concat(taxaRequerida.toString()).concat(" FLOW")
+            )
+
+            // Depositar o pagamento no vault da NFT (conhecimento fica "comprado")
+            self.flowVault.deposit(from: <-pagamento)
+
+            // Adicionar o conhecimento após pagamento
             let conhecimento = Conhecimento(tipo: tipo, descricao: descricao, pontos: pontos)
             self.bagDeConhecimento.append(conhecimento)
             self.pontosTotal = self.pontosTotal + pontos
@@ -82,6 +126,7 @@ access(all) contract SurfistaNFT: NonFungibleToken {
             self.verificarConquistas()
 
             emit ConhecimentoAdicionado(id: self.id, conhecimento: descricao)
+            emit TesouroEncontrado(id: self.id, tesouro: "Pagou ".concat(taxaRequerida.toString()).concat(" FLOW"), pontos: pontos)
         }
 
         /// Atualiza profundidade baseada na energia gasta
@@ -135,6 +180,27 @@ access(all) contract SurfistaNFT: NonFungibleToken {
         /// Verifica saldo de recompensas
         access(all) fun saldoRecompensas(): UFix64 {
             return self.flowVault.balance
+        }
+
+        /// Adiciona um amigo surfista (interação social é gratuita)
+        access(all) fun adicionarAmigo(amigoID: UInt64) {
+            if !self.amigos.contains(amigoID) {
+                self.amigos.append(amigoID)
+                // Interações sociais dão pontos bonus sem custo
+                self.pontosTotal = self.pontosTotal + 20
+
+                // Adicionar conquista social
+                if self.amigos.length >= 5 {
+                    self.conquistas["Social Surfer"] = true
+                }
+
+                emit InteracaoEntreSurfistas(surfista1: self.id, surfista2: amigoID, acao: "Amizade")
+            }
+        }
+
+        /// Envia mensagem para este surfista
+        access(all) fun receberMensagem(mensagem: String) {
+            self.mensagensRecebidas.append(mensagem)
         }
 
         access(all) fun getViews(): [Type] {
@@ -272,27 +338,55 @@ access(all) contract SurfistaNFT: NonFungibleToken {
     access(all) resource NFTMinter {
 
         /// Resgata um surfista criando sua NFT única
+        /// Se o nome já existir, adiciona #2, #3, etc.
+        /// Opcionalmente deposita FLOW inicial como presente de boas-vindas
         access(all) fun resgatarSurfista(
-            nome: String,
-            recipient: &{NonFungibleToken.CollectionPublic}
+            nomeBase: String,
+            recipient: &{NonFungibleToken.CollectionPublic},
+            presenteInicial: @FungibleToken.Vault?
         ): UInt64 {
             let id = SurfistaNFT.totalSupply
             SurfistaNFT.totalSupply = SurfistaNFT.totalSupply + 1
 
-            // Criar a NFT do surfista
+            // Verificar se o nome já existe e criar nome único
+            var nomeFinal = nomeBase
+            if SurfistaNFT.nomeRegistry[nomeBase] != nil {
+                // Nome já existe, adicionar número
+                let count = SurfistaNFT.nomeRegistry[nomeBase]! + 1
+                SurfistaNFT.nomeRegistry[nomeBase] = count
+                nomeFinal = nomeBase.concat("#").concat(count.toString())
+            } else {
+                // Primeiro surfista com esse nome
+                SurfistaNFT.nomeRegistry[nomeBase] = 1
+            }
+
+            // Criar a NFT do surfista com nome único
             let surfista <- create NFT(
                 id: id,
-                nome: nome
+                nome: nomeFinal
             )
 
-            // Adicionar conhecimento inicial
-            surfista.adicionarConhecimento(
-                tipo: "conquista",
-                descricao: "Resgatado pelo submarino!",
-                pontos: 100
-            )
+            // Se houver presente inicial de FLOW, depositar no vault da NFT
+            if presenteInicial != nil {
+                let presente <- presenteInicial!
+                let valor = presente.balance
+                surfista.depositarRecompensa(from: <-presente)
 
-            emit SurfistaResgatado(id: id, nome: nome, address: recipient.owner?.address ?? 0x0)
+                // Dar pontos bonus pelo presente (sem adicionar à bag)
+                surfista.pontosTotal = 100  // Pontos iniciais de resgate
+
+                emit TesouroEncontrado(
+                    id: id,
+                    tesouro: "Presente inicial: ".concat(valor.toString()).concat(" FLOW"),
+                    pontos: 100
+                )
+            } else {
+                destroy presenteInicial
+                // Mesmo sem presente, ganha pontos iniciais
+                surfista.pontosTotal = 50
+            }
+
+            emit SurfistaResgatado(id: id, nome: nomeFinal, address: recipient.owner?.address ?? 0x0)
 
             recipient.deposit(token: <-surfista)
 
@@ -302,6 +396,7 @@ access(all) contract SurfistaNFT: NonFungibleToken {
 
     init() {
         self.totalSupply = 0
+        self.nomeRegistry = {}
 
         self.CollectionStoragePath = /storage/surfistaNFTCollection
         self.CollectionPublicPath = /public/surfistaNFTCollection

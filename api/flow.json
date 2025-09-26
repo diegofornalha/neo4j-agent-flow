@@ -31,6 +31,12 @@
 			}
 		},
 		"SurfistaLeaderboard": "./contracts/SurfistaLeaderboard.cdc",
+		"SurfistaNFT": {
+			"source": "./contracts/SurfistaNFT.cdc",
+			"aliases": {
+				"testnet": "36395f9dde50ea27"
+			}
+		},
 		"WaveEventNFT": {
 			"source": "./contracts/WaveEventNFT.cdc",
 			"aliases": {
@@ -141,7 +147,8 @@
 				"WaveNFT",
 				"WaveEventPrizeNFT",
 				"HackathonBadge",
-				"SurfistaLeaderboard"
+				"SurfistaLeaderboard",
+				"SurfistaNFT"
 			]
 		}
 	}
