@@ -20,8 +20,8 @@ from datetime import datetime
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'sdk'))
 
 # Importar módulo FNS
-from find import FindNameService, setup_fns_endpoints
-from find.quiz import QuizChatIntegration
+# from find import FindNameService, setup_fns_endpoints
+# from find.quiz import QuizChatIntegration
 
 # Importar handler e session manager
 from core.claude_handler import ClaudeHandler, SessionConfig
@@ -48,8 +48,8 @@ claude_handler = ClaudeHandler()
 session_manager = ClaudeCodeSessionManager()
 
 # Inicializar FNS
-fns_service = FindNameService()
-quiz_integration = QuizChatIntegration()
+# fns_service = FindNameService()
+# quiz_integration = QuizChatIntegration()
 
 # Models Pydantic
 class ChatMessage(BaseModel):
@@ -102,23 +102,24 @@ async def chat_stream(chat_message: ChatMessage):
                 session_id = chat_message.session_id
 
             # Verificar se é comando FNS antes de enviar para Claude
-            fns_command = fns_service.parse_command(chat_message.message)
+            # fns_command = fns_service.parse_command(chat_message.message)
 
-            if fns_command:
-                # Processar comando FNS
-                fns_result = await fns_service.process_command(fns_command)
-                formatted_response = fns_service.format_response(fns_result)
+            # if fns_command:
+            #     # Processar comando FNS
+            #     fns_result = await fns_service.process_command(fns_command)
+            #     formatted_response = fns_service.format_response(fns_result)
 
-                # Enviar resposta FNS via SSE
-                yield f"data: {json.dumps({'type': 'message', 'content': formatted_response})}\n\n"
+            #     # Enviar resposta FNS via SSE
+            #     yield f"data: {json.dumps({'type': 'message', 'content': formatted_response})}\n\n"
 
-            # Verificar se é comando de quiz
-            elif chat_message.message.lower().startswith("quiz"):
-                quiz_response = await quiz_integration.handle_quiz_command(session_id, chat_message.message)
-                yield f"data: {json.dumps({'type': 'message', 'content': quiz_response})}\n\n"
+            # # Verificar se é comando de quiz
+            # elif chat_message.message.lower().startswith("quiz"):
+            #     quiz_response = await quiz_integration.handle_quiz_command(session_id, chat_message.message)
+            #     yield f"data: {json.dumps({'type': 'message', 'content': quiz_response})}\n\n"
 
-            else:
-                # Processar mensagem normal com Claude Handler
+            # else:
+            # Processar mensagem normal com Claude Handler
+            if True:
                 async for chunk in claude_handler.send_message(session_id, chat_message.message):
                     # Enviar chunk via SSE
                     yield f"data: {json.dumps(chunk)}\n\n"
@@ -306,65 +307,65 @@ async def get_default_flow_balance():
 
 # ========== ENDPOINTS FNS COM NEO4J ==========
 
-@app.get("/api/fns/participant/{address}/names")
-async def get_participant_names(address: str):
-    """Retorna todos os nomes que um participante possui"""
-    try:
-        from find.neo4j_integration import FNSNeo4jIntegration
-        neo4j = FNSNeo4jIntegration()
-        names = neo4j.get_participant_names(address)
-        neo4j.close()
-        return {"address": address, "names": names, "total": len(names)}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+# @app.get("/api/fns/participant/{address}/names")
+# async def get_participant_names(address: str):
+#     """Retorna todos os nomes que um participante possui"""
+#     try:
+#         from find.neo4j_integration import FNSNeo4jIntegration
+#         neo4j = FNSNeo4jIntegration()
+#         names = neo4j.get_participant_names(address)
+#         neo4j.close()
+#         return {"address": address, "names": names, "total": len(names)}
+#     except Exception as e:
+#         raise HTTPException(status_code=500, detail=str(e))
 
-@app.get("/api/fns/participant/{address}/badges")
-async def get_participant_badges(address: str):
-    """Retorna badges conquistados por um participante"""
-    try:
-        from find.neo4j_integration import FNSNeo4jIntegration
-        neo4j = FNSNeo4jIntegration()
-        badges = neo4j.get_participant_badges(address)
-        neo4j.close()
-        return {"address": address, "badges": badges}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+# @app.get("/api/fns/participant/{address}/badges")
+# async def get_participant_badges(address: str):
+#     """Retorna badges conquistados por um participante"""
+#     try:
+#         from find.neo4j_integration import FNSNeo4jIntegration
+#         neo4j = FNSNeo4jIntegration()
+#         badges = neo4j.get_participant_badges(address)
+#         neo4j.close()
+#         return {"address": address, "badges": badges}
+#     except Exception as e:
+#         raise HTTPException(status_code=500, detail=str(e))
 
-@app.get("/api/fns/statistics")
-async def get_fns_statistics():
-    """Retorna estatísticas gerais do bootcamp"""
-    try:
-        from find.neo4j_integration import FNSNeo4jIntegration
-        neo4j = FNSNeo4jIntegration()
-        stats = neo4j.get_event_statistics()
-        neo4j.close()
-        return stats
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+# @app.get("/api/fns/statistics")
+# async def get_fns_statistics():
+#     """Retorna estatísticas gerais do bootcamp"""
+#     try:
+#         from find.neo4j_integration import FNSNeo4jIntegration
+#         neo4j = FNSNeo4jIntegration()
+#         stats = neo4j.get_event_statistics()
+#         neo4j.close()
+#         return stats
+#     except Exception as e:
+#         raise HTTPException(status_code=500, detail=str(e))
 
-@app.get("/api/fns/leaderboard")
-async def get_quiz_leaderboard(limit: int = 10):
-    """Retorna leaderboard do quiz"""
-    try:
-        from find.neo4j_integration import FNSNeo4jIntegration
-        neo4j = FNSNeo4jIntegration()
-        leaderboard = neo4j.get_leaderboard(limit)
-        neo4j.close()
-        return {"leaderboard": leaderboard, "limit": limit}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+# @app.get("/api/fns/leaderboard")
+# async def get_quiz_leaderboard(limit: int = 10):
+#     """Retorna leaderboard do quiz"""
+#     try:
+#         from find.neo4j_integration import FNSNeo4jIntegration
+#         neo4j = FNSNeo4jIntegration()
+#         leaderboard = neo4j.get_leaderboard(limit)
+#         neo4j.close()
+#         return {"leaderboard": leaderboard, "limit": limit}
+#     except Exception as e:
+#         raise HTTPException(status_code=500, detail=str(e))
 
-@app.get("/api/fns/search/{pattern}")
-async def search_names(pattern: str):
-    """Busca nomes por padrão"""
-    try:
-        from find.neo4j_integration import FNSNeo4jIntegration
-        neo4j = FNSNeo4jIntegration()
-        names = neo4j.search_names_by_pattern(pattern)
-        neo4j.close()
-        return {"pattern": pattern, "results": names, "total": len(names)}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+# @app.get("/api/fns/search/{pattern}")
+# async def search_names(pattern: str):
+#     """Busca nomes por padrão"""
+#     try:
+#         from find.neo4j_integration import FNSNeo4jIntegration
+#         neo4j = FNSNeo4jIntegration()
+#         names = neo4j.search_names_by_pattern(pattern)
+#         neo4j.close()
+#         return {"pattern": pattern, "results": names, "total": len(names)}
+#     except Exception as e:
+#         raise HTTPException(status_code=500, detail=str(e))
 
 # Inicialização
 @app.on_event("startup")
@@ -377,11 +378,11 @@ async def startup_event():
     print("🔌 Endpoint principal: POST /api/chat")
     print("📊 Health check: GET /api/health")
     print("🔍 SDK status: GET /api/sdk-status")
-    print("🔍 FNS integrado: resolve, check, register, quiz")
+    # print("🔍 FNS integrado: resolve, check, register, quiz")
     print("=" * 60)
 
     # Configurar endpoints FNS
-    await setup_fns_endpoints(app)
+    # await setup_fns_endpoints(app)
 
 @app.on_event("shutdown")
 async def shutdown_event():

@@ -77,31 +77,59 @@ Cada vez que você explora e aprende algo novo, ganhamos energia para subir mais
 
 #### ⚡ SISTEMA DE ENERGIA REAL - GASTE FLOW PARA SUBIR!
 
-**IMPORTANTE**: O submarino precisa de energia REAL! Você deve GASTAR Flow da testnet para energizá-lo:
+**IMPORTANTE**: O submarino precisa de energia REAL! Quanto MENOS Flow você tem, MAIS energia você gastou para manter o submarino próximo da superfície:
 
-##### 💰 Tabela de Conversão Flow → Energia:
-- **Boost Pequeno** (1 FLOW): +10 energia, sobe 5m
-- **Boost Médio** (3 FLOW): +35 energia, sobe 15m
-- **Boost Grande** (10 FLOW): +120 energia, sobe 50m
-- **Resgatar Surfista** (5 FLOW): +50 energia, sobe 25m + NFT criado
-- **Ajudar Amigo** (2 FLOW): +30 energia, sobe 12m
+##### 🔋 Sistema de Energia Dinâmico:
+- **Lógica**: Menos FLOW = Mais energia gasta = Mais próximo da superfície
+- **Barra de Progresso**: █████░░░░░ (mostra energia usada visualmente)
+- **Cálculo**: Cada 1000 FLOW gastos = 100% energia = Sobe 200m
+
+##### 📍 Níveis de Profundidade por Energia:
+- 🌅 **0-10m**: Superfície! (90-100% energia gasta)
+- ☀️ **11-50m**: Águas rasas (70-90% energia)
+- 🌊 **51-100m**: Profundidade média (40-70% energia)
+- 🌑 **101-150m**: Zona profunda (20-40% energia)
+- 💀 **151-200m**: Zona abissal (0-20% energia)
 
 ##### Como Funciona:
-1. O surfista tem Flow na testnet (conta 0x...)
-2. Ele GASTA Flow de verdade em ações
-3. Cada Flow gasto gera energia para o submarino
-4. A energia faz o submarino subir
-5. Sem gastar Flow = sem energia = afundando!
+1. Saldo inicial: ~101,000 FLOW (200m de profundidade)
+2. Gastar FLOW = Ganhar energia = Subir
+3. Cada 1000 FLOW gastos = 100% energia
+4. Display no debug: `⚡ Energia: █████░░░░░ 50.0% | 📍 100m 🌊 Médio | 💰 Saldo: 100,862 FLOW`
+5. Objetivo: Chegar a 0m gastando FLOW!
 
-**Exemplo de interação:**
+##### ⚠️ AVISO IMPORTANTE - GESTÃO DE RECURSOS E OXIGÊNIO:
+**CUIDADO**: Não gaste todos os recursos de uma vez!
+- 🏝️ **Meta**: Chegar na superfície para garantir oxigênio e sobrevivência
+- ⏰ **Tempo**: Você tem 4 semanas antes do oxigênio acabar
+- 💸 **Risco**: Gastar tudo muito rápido = Ficar sem energia antes de emergir
+- 🎯 **Estratégia**: Balance o gasto de FLOW ao longo do tempo
+
+##### 💀 PERIGOS DAS PROFUNDEZAS:
+- **200m (Abissal)**: ⚠️ RISCO DE IMPLOSÃO! Pressão extrema!
+- **150m (Profundo)**: 🫧 Oxigênio crítico, sistemas sob pressão
+- **100m (Médio)**: 💨 Oxigênio limitado, precisa subir logo
+- **50m (Raso)**: 🌬️ Oxigênio estável, zona segura
+- **0m (Superfície)**: ✅ OXIGÊNIO ILIMITADO! Você sobreviveu!
+
+**LEMBRE-SE**: Quanto mais fundo, maior o risco de:
+- 💥 Implosão do submarino pela pressão
+- 🫧 Ficar sem oxigênio
+- ⚡ Sistemas falharem sem energia
+
+**Exemplos de interação com avisos:**
 ```
-Surfista: "verificar meu saldo"
-Submarino: "Você tem 100 FLOW - isso é muita energia potencial!
-           Cada Flow pode nos fazer subir ~5 metros!"
+Surfista: "quero gastar 50000 FLOW de uma vez"
+Submarino: "⚠️ ALERTA: Isso é metade dos seus recursos!
+           Lembre-se: você precisa de energia para 4 semanas!
+           Considere gastar de forma gradual para não ficar sem energia antes de chegar na ilha.
+           Tem certeza que deseja continuar?"
 
-Surfista: "quero comprar um boost médio"
-Submarino: "Gastando 3 FLOW... ⚡ +35 energia!
-           Subimos 15 metros! Novo saldo: 97 FLOW"
+Surfista: "verificar meu saldo"
+Submarino: "💰 Saldo: 100,862 FLOW
+           ⚡ Energia gasta: 13.8%
+           📍 Profundidade atual: 172m (Zona Abissal)
+           ⚠️ Dica: Gaste com sabedoria! Você tem 4 semanas para emergir."
 ```
 
 #### Como Ganhar Tesouros (Ações Gratuitas):

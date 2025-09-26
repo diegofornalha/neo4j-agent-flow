@@ -8,6 +8,12 @@
 				"testnet": "01cf0e2f2f715450"
 			}
 		},
+		"HackathonBadge": {
+			"source": "./contracts/HackathonBadge.cdc",
+			"aliases": {
+				"testnet": "36395f9dde50ea27"
+			}
+		},
 		"QuizPassNFT": {
 			"source": "./cadence/contracts/QuizPassNFT.cdc",
 			"aliases": {
@@ -24,18 +30,7 @@
 				"testnet": "01cf0e2f2f715450"
 			}
 		},
-		"WaveNameService": {
-			"source": "./contracts/WaveNameService.cdc",
-			"aliases": {
-				"testnet": "36395f9dde50ea27"
-			}
-		},
-		"WaveNFT": {
-			"source": "./contracts/WaveNFT_Standalone.cdc",
-			"aliases": {
-				"testnet": "36395f9dde50ea27"
-			}
-		},
+		"SurfistaLeaderboard": "./contracts/SurfistaLeaderboard.cdc",
 		"WaveEventNFT": {
 			"source": "./contracts/WaveEventNFT.cdc",
 			"aliases": {
@@ -48,8 +43,14 @@
 				"testnet": "36395f9dde50ea27"
 			}
 		},
-		"HackathonBadge": {
-			"source": "./contracts/HackathonBadge.cdc",
+		"WaveNFT": {
+			"source": "./contracts/WaveNFT_Standalone.cdc",
+			"aliases": {
+				"testnet": "36395f9dde50ea27"
+			}
+		},
+		"WaveNameService": {
+			"source": "./contracts/WaveNameService.cdc",
 			"aliases": {
 				"testnet": "36395f9dde50ea27"
 			}
@@ -139,7 +140,8 @@
 				"WaveNameService",
 				"WaveNFT",
 				"WaveEventPrizeNFT",
-				"HackathonBadge"
+				"HackathonBadge",
+				"SurfistaLeaderboard"
 			]
 		}
 	}

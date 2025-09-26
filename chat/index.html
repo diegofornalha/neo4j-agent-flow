@@ -207,7 +207,42 @@
                 }
 
                 balanceDiv.classList.remove('loading');
-                log(`Saldo Flow atualizado: ${balanceAmount.textContent}`);
+
+                // Calcular energia do submarino (menos FLOW = mais próximo da superfície)
+                const balance = parseFloat(balanceAmount.textContent.replace(',', ''));
+                const maxBalance = 101000; // Saldo inicial aproximado
+                const energiaUsada = maxBalance - balance;
+                const percentualEnergia = Math.max(0, Math.min(100, (energiaUsada / 1000) * 100)); // Cada 1000 FLOW = 100% energia
+
+                // Criar barra de progresso
+                const totalBarras = 10;
+                const barrasPreenchidas = Math.round((percentualEnergia / 100) * totalBarras);
+                const barrasVazias = totalBarras - barrasPreenchidas;
+                const barraProgresso = '█'.repeat(barrasPreenchidas) + '░'.repeat(barrasVazias);
+
+                // Calcular profundidade (0% energia = 200m fundo, 100% energia = 0m superfície)
+                const profundidade = Math.round(200 - (percentualEnergia * 2));
+                let statusProfundidade = '';
+                let alertaOxigenio = '';
+
+                if (profundidade <= 10) {
+                    statusProfundidade = '🌅 Superfície!';
+                    alertaOxigenio = '✅ O₂ OK';
+                } else if (profundidade <= 50) {
+                    statusProfundidade = '☀️ Raso';
+                    alertaOxigenio = '🌬️ O₂ Estável';
+                } else if (profundidade <= 100) {
+                    statusProfundidade = '🌊 Médio';
+                    alertaOxigenio = '💨 O₂ Limitado';
+                } else if (profundidade <= 150) {
+                    statusProfundidade = '🌑 Profundo';
+                    alertaOxigenio = '🫧 O₂ CRÍTICO!';
+                } else {
+                    statusProfundidade = '💀 Abissal';
+                    alertaOxigenio = '⚠️ RISCO IMPLOSÃO!';
+                }
+
+                log(`⚡ Energia: ${barraProgresso} ${percentualEnergia.toFixed(1)}% | 📍 ${profundidade}m ${statusProfundidade} | ${alertaOxigenio} | 💰 Saldo: ${balanceAmount.textContent} FLOW`);
 
             } catch (error) {
                 console.error('Erro ao buscar saldo Flow:', error);
