@@ -22,7 +22,7 @@ class SubmarinoClaude:
 
     def mostrar_status(self):
         print("\n" + "="*50)
-        print("🚢 STATUS DO SUBMARINO XR-7000")
+        print("🚢 STATUS DO SUBMARINO CLAUDE CODE SDK")
         print("="*50)
         print(f"📍 Profundidade: {self.profundidade}m")
         print(f"💨 Oxigênio: {self.oxigenio}%")

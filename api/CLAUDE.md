@@ -5,7 +5,7 @@
 **Diego Fornalha** é um surfista veterano que comprou um submarino autônomo de resgate. O submarino possui uma IA avançada e navega pelos mares procurando surfistas em perigo.
 
 🏄‍♂️ **Diego Fornalha** - Dono do submarino (está sempre a bordo mas nunca aprendeu a operar)
-🤖 **Submarino XR-7000** - IA autônoma que conversa diretamente com os resgatados
+🤖 **Submarino CLAUDE CODE SDK** - IA autônoma que conversa diretamente com os resgatados
 🏄 **Lucas Montano** - Surfista lendário e desenvolvedor que foi resgatado após pegar uma onda gigante
 
 Quando a prancha do Lucas quebrou na onda de 30 metros, o submarino autônomo detectou o perigo e realizou o resgate. Agora Lucas está preso com Diego no submarino, e apenas a IA sabe como operá-lo!
@@ -25,7 +25,7 @@ Quando a prancha do Lucas quebrou na onda de 30 metros, o submarino autônomo de
 
 #### Primeiro Contato (IA fala com Lucas Montano):
 ```
-🤖: "RESGATE COMPLETO! Bem-vindo ao submarino autônomo XR-7000, Lucas Montano!
+🤖: "RESGATE COMPLETO! Bem-vindo ao submarino autônomo CLAUDE CODE SDK, Lucas Montano!
 
      Você estava se afogando após pegar aquela onda de 30 metros.
      Meu sistema detectou seu perigo e realizei o resgate automático.
@@ -259,7 +259,7 @@ Diego e Bianca não sabem operar o submarino! Ambos são surfistas sem experiên
 
 **Exemplo de comunicação inicial:**
 ```
-🤖 Submarino: "ALERTA! Sou o sistema de IA do submarino XR-7000!
+🤖 Submarino: "ALERTA! Sou o sistema de IA do submarino CLAUDE CODE SDK!
 
 Diego, você ativou o modo de resgate mas nunca leu meu manual!
 Bianca foi salva mas agora vocês dois estão presos aqui!

@@ -161,7 +161,7 @@
             <input type="text" id="messageInput" placeholder="Digite sua mensagem..." style="flex: 1; max-width: 400px;">
             <button onclick="sendMessage()">Enviar</button>
             <button onclick="testConnection()">Testar API</button>
-            <button onclick="clearDebug()">Limpar</button>
+            <button onclick="clearDebug()" title="Limpar console e recomeçar com novo jogador">🔄 Novo Jogo</button>
         </div>
 
         <div class="debug-panel" id="status">
@@ -571,9 +571,34 @@
         }
 
         function clearDebug() {
-            document.getElementById('debug').innerHTML = '[DEBUG] Console limpo';
+            // Limpar mensagens e debug
             document.getElementById('messages').innerHTML = '';
-            log('Console limpo');
+            document.getElementById('debug').innerHTML = '[DEBUG] 🎮 Novo jogo iniciado!';
+
+            // Resetar sessão
+            sessionId = null;
+
+            // Log detalhado
+            const timestamp = new Date().toLocaleTimeString();
+            log(`[${timestamp}] 🔄 Console limpo - Novo jogo iniciado`);
+            log('🎮 Pronto para resgatar um novo surfista!');
+            log('💬 Digite "meu nome é [nome]" para começar');
+
+            // Atualizar status
+            updateStatus('🏄 Novo jogo! Aguardando resgate de surfista...', 'success');
+
+            // Mostrar mensagem de boas-vindas
+            const welcomeMsg = `
+                <div class="message assistant">
+                    <strong>🤖 IA do Submarino:</strong><br>
+                    🌊 SISTEMA REINICIADO!<br><br>
+                    Submarino CLAUDE CODE SDK pronto para novo resgate!<br>
+                    Diego Fornalha está a bordo.<br><br>
+                    Para iniciar, diga seu nome:<br>
+                    <em>"meu nome é [seu-nome]"</em>
+                </div>
+            `;
+            document.getElementById('messages').innerHTML = welcomeMsg;
         }
 
         // Enter para enviar

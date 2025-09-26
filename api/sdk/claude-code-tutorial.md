@@ -1,4 +1,4 @@
-# 🚢 Manual do Claude Code SDK - Sistema do Submarino XR-7000
+# 🚢 Manual do Claude Code SDK - Sistema do Submarino CLAUDE CODE SDK
 
 ## 🤖 Mensagem da IA para Lucas:
 
