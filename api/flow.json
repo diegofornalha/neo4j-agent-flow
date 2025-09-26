@@ -35,6 +35,24 @@
 			"aliases": {
 				"testnet": "36395f9dde50ea27"
 			}
+		},
+		"WaveEventNFT": {
+			"source": "./contracts/WaveEventNFT.cdc",
+			"aliases": {
+				"testnet": "36395f9dde50ea27"
+			}
+		},
+		"WaveEventPrizeNFT": {
+			"source": "./contracts/WaveEventPrizeNFT.cdc",
+			"aliases": {
+				"testnet": "36395f9dde50ea27"
+			}
+		},
+		"HackathonBadge": {
+			"source": "./contracts/HackathonBadge.cdc",
+			"aliases": {
+				"testnet": "36395f9dde50ea27"
+			}
 		}
 	},
 	"dependencies": {
@@ -119,7 +137,9 @@
 		"testnet": {
 			"bootcamp-account": [
 				"WaveNameService",
-				"WaveNFT"
+				"WaveNFT",
+				"WaveEventPrizeNFT",
+				"HackathonBadge"
 			]
 		}
 	}
